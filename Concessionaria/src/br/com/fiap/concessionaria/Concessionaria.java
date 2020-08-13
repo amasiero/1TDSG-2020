@@ -39,7 +39,7 @@ public class Concessionaria {
 	
 	public Boolean consultaVeiculo(Automovel automovel) {
 		return automoveis.stream()
-				.filter(a -> a.equals(automovel))
+				.filter(automovel::equals) // Method Reference
 				.count() == 1;
 	}
 }
