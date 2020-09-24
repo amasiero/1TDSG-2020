@@ -15,10 +15,26 @@ import br.com.fiap.escola.exception.FileEscolaException;
 import br.com.fiap.escola.helper.FileHelper;
 
 // DAO -> Data Access Object -> Objeto de Acesso ao Dados (Banco de Dados)
-public class AlunoDAO { // Métodos de conexão com o banco de dados
-	
+
+/**
+ * Descrição da classe
+ *
+ * @author Andrey Masiero
+ * @version 1.0
+ *
+ */
+public class AlunoDAO implements DAO<Aluno>{ // Métodos de conexão com o banco de dados
+
+	/**
+	 * Descricao do atribuito. Vide {@link java.sql.Connection}
+	 */
 	private Connection conn;
-	
+
+	/**
+	 * Cria a conexao com o banco de dados
+	 *
+	 * @since 1.0
+	 */
 	private void conecta() {
 		try {
 			Properties props = FileHelper.getEnvProperties();
@@ -28,7 +44,14 @@ public class AlunoDAO { // Métodos de conexão com o banco de dados
 			System.err.println(e.getMessage());
 		}
 	}
-	
+
+	/**
+	 * Método para incluir o aluno no banco de dados.
+	 *
+	 * @param aluno que será incluido na base de dados
+	 * @return aluno atulizado com o id gerado no banco de dados.
+	 * @since 1.0
+	 */
 	public Aluno salva(Aluno aluno) {
 		try {
 			conecta();

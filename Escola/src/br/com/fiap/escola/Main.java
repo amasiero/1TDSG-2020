@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.Scanner;
 
 import br.com.fiap.escola.dao.AlunoDAO;
+import br.com.fiap.escola.dao.DAO;
 import br.com.fiap.escola.domain.Aluno;
+import br.com.fiap.escola.exception.AlunoException;
+import br.com.fiap.escola.validation.AlunoValidator;
 
 public class Main {
 
@@ -55,22 +58,26 @@ public class Main {
 	}
 
 	private static void atualizaAluno(Scanner scan) {
-		System.out.println("#--- ATUALIZA CADASTRO DO ALUNO ---#");
-		Aluno aluno = buscaAlunoPorRM(scan);
-		
-		System.out.print("Digite a nota 1: > ");
-		Double nota1 = scan.nextDouble();
-		
-		System.out.print("Digite a nota 2: > ");
-		Double nota2 = scan.nextDouble();
-		
-		aluno.setNota1(nota1);
-		aluno.setNota2(nota2);
-		
-		AlunoDAO db = new AlunoDAO();
-		db.atualiza(aluno);
-		
-		System.out.println("#--- Cadastro atualizado com sucesso.");
+		try {
+			System.out.println("#--- ATUALIZA CADASTRO DO ALUNO ---#");
+			Aluno aluno = buscaAlunoPorRM(scan);
+
+			System.out.print("Digite a nota 1: > ");
+			Double nota1 = scan.nextDouble();
+
+			System.out.print("Digite a nota 2: > ");
+			Double nota2 = scan.nextDouble();
+
+			aluno.setNota1(nota1);
+			aluno.setNota2(nota2);
+
+			DAO<Aluno> db = new AlunoDAO();
+			db.atualiza(aluno);
+
+			System.out.println("#--- Cadastro atualizado com sucesso.");
+		}catch (AlunoException e) {
+			System.err.println(e.getMessage());
+		}
 	}
 
 	private static void consultaAlunos() {
@@ -86,17 +93,24 @@ public class Main {
 
 	private static void consultaPorRM(Scanner scan) {
 		System.out.println("#--- CONSULTA ALUNO POR RM ---#");
-		
-		Aluno aluno = buscaAlunoPorRM(scan);
-		System.out.println(aluno);
+
+		try {
+			Aluno aluno = buscaAlunoPorRM(scan);
+			System.out.println(aluno);
+		} catch (AlunoException e) {
+			System.err.println(e.getMessage());
+		}
 	}
 
-	private static Aluno buscaAlunoPorRM(Scanner scan) {
+	private static Aluno buscaAlunoPorRM(Scanner scan) throws AlunoException {
 		System.out.print("Digite o número do RM: > ");
 		Integer rm = scan.nextInt();
-		
+		AlunoValidator.validaRM(rm);
+
 		AlunoDAO db = new AlunoDAO();
 		Aluno aluno = db.consultaPorRm(rm);
+		AlunoValidator.validaObjetoAluno(aluno);
+
 		return aluno;
 	}
 	
