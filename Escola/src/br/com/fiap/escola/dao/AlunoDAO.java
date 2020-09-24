@@ -8,8 +8,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import br.com.fiap.escola.domain.Aluno;
+import br.com.fiap.escola.exception.FileEscolaException;
+import br.com.fiap.escola.helper.FileHelper;
+
 // DAO -> Data Access Object -> Objeto de Acesso ao Dados (Banco de Dados)
 public class AlunoDAO { // Métodos de conexão com o banco de dados
 	
@@ -17,8 +21,10 @@ public class AlunoDAO { // Métodos de conexão com o banco de dados
 	
 	private void conecta() {
 		try {
-			this.conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "system", "system");
-		} catch (SQLException e) {
+			Properties props = FileHelper.getEnvProperties();
+			this.conn = DriverManager.getConnection(props.getProperty("database.url"),
+					props.getProperty("database.user"), props.getProperty("database.password"));
+		} catch (SQLException | FileEscolaException e) {
 			System.err.println(e.getMessage());
 		}
 	}
